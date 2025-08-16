@@ -4,9 +4,9 @@ This is official code for our work:<br>
 Peekaboo 2: Hiding Parts of an Image for Unsupervised Object Localization in Videos
 <br>
 
-Writeup
+ADD_WRITEUP
 
-VIDEO DEMO
+ADD_VIDEO
 
 ## Updates
 
@@ -17,8 +17,8 @@ VIDEO DEMO
 This code requires Python 3.10 and CUDA 12.4. Clone the project repository, then create a fresh environment and install the project requirements inside that environment by:
 
 ```bash
-git clone https://github.com/hasibzunair/peekaboo2 && cd peekaboo2/sam2
-conda create -n peekaboo2 python=3.10 
+cd sam2
+conda create -n peekaboo2 python=3.10
 conda activate peekaboo2
 pip install -e .
 pip install -e ".[notebooks]"
@@ -33,14 +33,14 @@ SAM 2.1 Checkpoint Download
 ```
 cd sam2/checkpoints
 ./download_ckpts.sh
-cd ..
+cd ../..
 ```
 
 To run the demo with your custom video, 
 
 ```
 cd scripts/
-CUDA_VISIBLE_DEVICES=1 python demo.py --video-path ../data/videos/person_2.mp4 --output-path ./outputs/output.mp4
+python demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/output.mp4
 ```
 
 ## Acknowledgements
