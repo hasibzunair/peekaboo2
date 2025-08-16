@@ -4,13 +4,11 @@ This is official code for our work:<br>
 Peekaboo 2: Hiding Parts of an Image for Unsupervised Object Localization in Videos
 <br>
 
-ADD_WRITEUP
-
-https://github.com/user-attachments/assets/fee35c45-f81d-413c-bb95-bb19ebbde7ba
+https://github.com/user-attachments/assets/5ff39c8c-5503-47bd-be17-71183b03d35b
 
 ## Updates
 
-- \[2024.07.19\] Create demo for Peekaboo 2 on custom video.
+- \[2025.08.16\] Create demo for Peekaboo 2 on custom video.
 
 ## 1. Specification of dependencies
 
