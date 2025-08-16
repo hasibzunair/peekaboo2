@@ -6,7 +6,7 @@ Peekaboo 2: Hiding Parts of an Image for Unsupervised Object Localization in Vid
 
 ADD_WRITEUP
 
-ADD_VIDEO
+https://github.com/user-attachments/assets/fee35c45-f81d-413c-bb95-bb19ebbde7ba
 
 ## Updates
 
