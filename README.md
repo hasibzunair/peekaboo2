@@ -38,7 +38,7 @@ To run the demo with your custom video,
 
 ```
 cd scripts/
-python vide_demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/output.mp4
+python video_demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/peekaboo2_vid.mp4
 ```
 
 ## 3. Demo in image
@@ -51,4 +51,4 @@ python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ..
 
 ## Acknowledgements
 
-This repository was built on top of [Peekaboo](https://github.com/hasibzunair/peekaboo) and [SAM](https://github.com/facebookresearch/sam2). Consider acknowledging these projects.
+This repository was built on top of [Peekaboo](https://github.com/hasibzunair/peekaboo) and [SAM2](https://github.com/facebookresearch/sam2). Consider acknowledging these projects.
