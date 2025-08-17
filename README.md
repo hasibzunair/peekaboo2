@@ -38,7 +38,17 @@ To run the demo with your custom video,
 
 ```
 cd scripts/
-python demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/output.mp4
+python vide_demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/output.mp4
+
+python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
+```
+
+## 3. Demo in image
+
+This bascially run an image through the Peekaboo model to discover the object in the image, and then refines the output mask using SAM2.
+
+```
+python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
 ```
 
 ## Acknowledgements

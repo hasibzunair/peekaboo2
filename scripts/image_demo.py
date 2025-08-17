@@ -1,7 +1,7 @@
-# Code for Peekaboo
+# Code for Peekaboo. 2
 # Author: Hasib Zunair
 
-"""PeekabooSAM2 demo on custom video."""
+"""PeekabooSAM2 demo on an image."""
 
 import sys
 import os
@@ -13,7 +13,8 @@ import torch.nn.functional as F
 import cv2
 import gc
 from PIL import Image
-from sam2.build_sam import build_sam2_video_predictor
+from sam2.build_sam import build_sam2
+from sam2.sam2_image_predictor import SAM2ImagePredictor
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 from model import PeekabooModel
@@ -70,33 +71,25 @@ def main(args):
     detection_model.eval()
     print(f"Detection model {args.det_model_weights} loaded correctly.")
 
-    # Load tracker predictor
-    predictor = build_sam2_video_predictor(
-        args.track_model_config, args.track_model_weights, device=device
-    )
+    # Load SAM2 predictor (for image inference)
+    predictor = SAM2ImagePredictor(build_sam2(args.track_model_config, args.track_model_weights, device=device))
 
-    # Open input video
-    cap = cv2.VideoCapture(args.video_path)
-    if not cap.isOpened():
-        raise ValueError(f"Cannot open video: {args.video_path}")
-
-    # Get first frame
-    ret, first_frame = cap.read()
-    if not ret:
-        raise ValueError("Could not read first frame")
-
-    # Init frame rate, w, h, total frames
-    frame_rate = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    print(f"Video loaded: {width}x{height} at {frame_rate} FPS, {total_frames} frames")
+    # Load input image
+    if not os.path.exists(args.image_path):
+        raise ValueError(f"Image not found: {args.image_path}")
+    
+    # Read image with OpenCV
+    input_image = cv2.imread(args.image_path)
+    if input_image is None:
+        raise ValueError(f"Could not read image: {args.image_path}")
+    
+    height, width = input_image.shape[:2]
+    print(f"Image loaded: {width}x{height}")
 
     with torch.inference_mode():
 
         # Convert to PIL for the detection model
-        img = Image.fromarray(cv2.cvtColor(first_frame, cv2.COLOR_BGR2RGB))
+        img = Image.fromarray(cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB))
         original_size = img.size  # (w, h)
 
         # Preprocess
@@ -129,68 +122,56 @@ def main(args):
         )
         print(f"Predicted bounding box: {pred_bbox}")
 
-        # Init predictor state with the video path
-        inference_state = predictor.init_state(video_path=args.video_path)
-
-        # Get box from Peekaboo in (x_min, y_min, x_max, y_max)
-        ann_frame_idx = 0
-        ann_obj_id = 0
-        _, out_obj_ids, out_mask_logits = predictor.add_new_points_or_box(
-            inference_state=inference_state,
-            frame_idx=ann_frame_idx,
-            obj_id=ann_obj_id,
-            box=pred_bbox,
+        # Convert image to RGB
+        image_rgb = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
+        
+        # Set image in SAM2
+        predictor.set_image(image_rgb)
+        
+        # Use the bounding box from Peekaboo to refine with SAM2
+        # pred_bbox is in format (x_min, y_min, x_max, y_max)
+        input_box = np.array(pred_bbox)
+        
+        # Get refined mask from SAM2
+        masks, _, _ = predictor.predict(
+            point_coords=None,
+            point_labels=None,
+            box=input_box[None, :],
+            multimask_output=False,
         )
+        
+        # Get the best mask
+        refined_mask = masks[0]
+        refined_mask = refined_mask.astype(bool)
 
-        # Prepare output video writer
+        # Create output image with overlay
+        output_image = input_image.copy()
+        
+        # Create overlay for the refined mask
+        overlay = np.zeros_like(output_image, dtype=np.uint8)
+        overlay[refined_mask] = (0, 0, 255)
+        
+        # Draw bounding box
+        x_min, y_min, x_max, y_max = pred_bbox
+        cv2.rectangle(output_image, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (0, 0, 255), 2)
+        
+        # Blend the overlay with the original image
+        blended = cv2.addWeighted(output_image, 1, overlay, 0.4, 0)
+        
+        # Save
         os.makedirs(os.path.dirname(args.output_path), exist_ok=True) if os.path.dirname(args.output_path) else None
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        out = cv2.VideoWriter(args.output_path, fourcc, frame_rate, (width, height))
-
-        # Run propagation throughout the video
-        video_segments = (
-            {}
-        )  # video_segments contains the per-frame segmentation results
-        for out_frame_idx, out_obj_ids, out_mask_logits in predictor.propagate_in_video(
-            inference_state
-        ):
-            video_segments[out_frame_idx] = {
-                out_obj_id: (out_mask_logits[i] > 0.0).cpu().numpy()
-                for i, out_obj_id in enumerate(out_obj_ids)
-            }
-
-        # Reset capture to read frames again for overlay
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-
-        # Write frames
-        for frame_idx in range(total_frames):
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            overlay = np.zeros_like(frame, dtype=np.uint8)
-
-            if frame_idx in video_segments:
-                for _, mask in video_segments[frame_idx].items():
-                    mask_2d = np.squeeze(mask)
-                    overlay[mask_2d] = (0, 0, 255)
-
-                # Draw bounding box around the mask
-                y_indices, x_indices = np.where(mask_2d)
-                if y_indices.size > 0 and x_indices.size > 0:
-                    x_min, x_max = x_indices.min(), x_indices.max()
-                    y_min, y_max = y_indices.min(), y_indices.max()
-                    cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 0, 255), 2)
-
-            blended = cv2.addWeighted(frame, 1, overlay, 0.4, 0)
-            out.write(blended)
-
-        cap.release()
-        out.release()
+        cv2.imwrite(args.output_path, blended)
         print(f"Output saved to {args.output_path}")
+        
+        # Optionally save just the mask
+        if args.save_mask:
+            mask_path = args.output_path.replace('.jpg', '_mask.jpg').replace('.png', '_mask.png')
+            mask_vis = (refined_mask * 255).astype(np.uint8)
+            cv2.imwrite(mask_path, mask_vis)
+            print(f"Mask saved to {mask_path}")
 
     # Cleanup
-    del predictor, inference_state
+    del predictor
     gc.collect()
     if device.type == "cuda":
         torch.clear_autocast_cache()
@@ -199,10 +180,10 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Demo of Peekaboo 2",
+        description="Demo of Peekaboo + SAM2 for image inference",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--video-path", required=True, help="Input video path (.mp4)")
+    parser.add_argument("--image-path", default="../data/examples/octopus.jpeg", help="Input image path (.jpg, .png, etc.)")
     parser.add_argument(
         "--det-model-config",
         type=str,
@@ -216,14 +197,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--track-model-weights",
         default="../sam2/checkpoints/sam2.1_hiera_large.pt",
-        help="Path to model checkpoint",
+        help="Path to SAM2 model checkpoint",
     )
     parser.add_argument(
         "--track-model-config",
         default="../sam2/configs/sam2.1/sam2.1_hiera_l.yaml",
-        help="Path to model config",
+        help="Path to SAM2 model config",
     )
-    parser.add_argument("--output-path", default="output.mp4", help="Output video path")
+    parser.add_argument("--output-path", default="output.jpg", help="Output image path")
+    parser.add_argument("--save-mask", action="store_true", help="Save the binary mask separately")
     args = parser.parse_args()
 
     main(args)
