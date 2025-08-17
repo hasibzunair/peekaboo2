@@ -4,7 +4,7 @@ This is official code for our work:<br>
 Peekaboo 2: Unsupervised Object Localization in Images and Videos
 <br>
 
-https://github.com/user-attachments/assets/5ff39c8c-5503-47bd-be17-71183b03d35b
+https://github.com/user-attachments/assets/f2db4e19-4dc3-40fa-a18a-e037852fffbb
 
 ## Updates
 
