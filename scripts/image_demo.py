@@ -72,17 +72,19 @@ def main(args):
     print(f"Detection model {args.det_model_weights} loaded correctly.")
 
     # Load SAM2 predictor (for image inference)
-    predictor = SAM2ImagePredictor(build_sam2(args.track_model_config, args.track_model_weights, device=device))
+    predictor = SAM2ImagePredictor(
+        build_sam2(args.track_model_config, args.track_model_weights, device=device)
+    )
 
     # Load input image
     if not os.path.exists(args.image_path):
         raise ValueError(f"Image not found: {args.image_path}")
-    
+
     # Read image with OpenCV
     input_image = cv2.imread(args.image_path)
     if input_image is None:
         raise ValueError(f"Could not read image: {args.image_path}")
-    
+
     height, width = input_image.shape[:2]
     print(f"Image loaded: {width}x{height}")
 
@@ -124,14 +126,14 @@ def main(args):
 
         # Convert image to RGB
         image_rgb = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
-        
+
         # Set image in SAM2
         predictor.set_image(image_rgb)
-        
+
         # Use the bounding box from Peekaboo to refine with SAM2
         # pred_bbox is in format (x_min, y_min, x_max, y_max)
         input_box = np.array(pred_bbox)
-        
+
         # Get refined mask from SAM2
         masks, _, _ = predictor.predict(
             point_coords=None,
@@ -139,33 +141,45 @@ def main(args):
             box=input_box[None, :],
             multimask_output=False,
         )
-        
+
         # Get the best mask
         refined_mask = masks[0]
         refined_mask = refined_mask.astype(bool)
 
         # Create output image with overlay
         output_image = input_image.copy()
-        
+
         # Create overlay for the refined mask
         overlay = np.zeros_like(output_image, dtype=np.uint8)
         overlay[refined_mask] = (0, 0, 255)
-        
+
         # Draw bounding box
         x_min, y_min, x_max, y_max = pred_bbox
-        cv2.rectangle(output_image, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (0, 0, 255), 2)
-        
+        cv2.rectangle(
+            output_image,
+            (int(x_min), int(y_min)),
+            (int(x_max), int(y_max)),
+            (0, 0, 255),
+            2,
+        )
+
         # Blend the overlay with the original image
         blended = cv2.addWeighted(output_image, 1, overlay, 0.4, 0)
-        
+
         # Save
-        os.makedirs(os.path.dirname(args.output_path), exist_ok=True) if os.path.dirname(args.output_path) else None
+        (
+            os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+            if os.path.dirname(args.output_path)
+            else None
+        )
         cv2.imwrite(args.output_path, blended)
         print(f"Output saved to {args.output_path}")
-        
+
         # Optionally save just the mask
         if args.save_mask:
-            mask_path = args.output_path.replace('.jpg', '_mask.jpg').replace('.png', '_mask.png')
+            mask_path = args.output_path.replace(".jpg", "_mask.jpg").replace(
+                ".png", "_mask.png"
+            )
             mask_vis = (refined_mask * 255).astype(np.uint8)
             cv2.imwrite(mask_path, mask_vis)
             print(f"Mask saved to {mask_path}")
@@ -183,7 +197,11 @@ if __name__ == "__main__":
         description="Demo of Peekaboo + SAM2 for image inference",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--image-path", default="../data/examples/octopus.jpeg", help="Input image path (.jpg, .png, etc.)")
+    parser.add_argument(
+        "--image-path",
+        default="../data/examples/octopus.jpeg",
+        help="Input image path (.jpg, .png, etc.)",
+    )
     parser.add_argument(
         "--det-model-config",
         type=str,
@@ -205,7 +223,9 @@ if __name__ == "__main__":
         help="Path to SAM2 model config",
     )
     parser.add_argument("--output-path", default="output.jpg", help="Output image path")
-    parser.add_argument("--save-mask", action="store_true", help="Save the binary mask separately")
+    parser.add_argument(
+        "--save-mask", action="store_true", help="Save the binary mask separately"
+    )
     args = parser.parse_args()
 
     main(args)

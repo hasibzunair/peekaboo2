@@ -51,4 +51,4 @@ python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ..
 
 ## Acknowledgements
 
-This repository was built on top of [Peekaboo](https://github.com/hasibzunair/peekaboo) and [SAM2](https://github.com/facebookresearch/sam2). Consider acknowledging these projects.
+This repository was built on top of [Peekaboo](https://github.com/hasibzunair/peekaboo) and [SAM2](https://github.com/facebookresearch/sam2) by Meta FAIR. Consider acknowledging these projects.

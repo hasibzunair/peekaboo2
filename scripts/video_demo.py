@@ -143,7 +143,11 @@ def main(args):
         )
 
         # Prepare output video writer
-        os.makedirs(os.path.dirname(args.output_path), exist_ok=True) if os.path.dirname(args.output_path) else None
+        (
+            os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+            if os.path.dirname(args.output_path)
+            else None
+        )
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         out = cv2.VideoWriter(args.output_path, fourcc, frame_rate, (width, height))
 
