@@ -4,7 +4,7 @@
 """Visualize model predictions on video.
 
 Usage
-CUDA_VISIBLE_DEVICES=1 python video_demo.py --video-path ./data/examples/videos/person_2.mp4 --output-dir ./outputs/
+CUDA_VISIBLE_DEVICES=1 python video_demo.py --video-path ./data/examples/person.mp4 --output-dir ./outputs/
 """
 
 import os
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--video-path",
         type=str,
-        default="data/examples/video.mp4",
+        default="data/examples/person.mp4",
         help="Video path.",
     )
     parser.add_argument(
