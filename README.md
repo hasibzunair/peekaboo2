@@ -1,14 +1,14 @@
-# Peekaboo 2: Unsupervised Object Localization in Videos
+# Peekaboo 2: Unsupervised Object Localization in Images and Videos
 
 This is official code for our work:<br>
-Peekaboo 2: Hiding Parts of an Image for Unsupervised Object Localization in Videos
+Peekaboo 2: Unsupervised Object Localization in Images and Videos
 <br>
 
 https://github.com/user-attachments/assets/5ff39c8c-5503-47bd-be17-71183b03d35b
 
 ## Updates
 
-- \[2025.08.16\] Create demo for Peekaboo 2 on custom video.
+- \[2025.08.16\] Release demo for Peekaboo 2 on images and videos.
 
 ## 1. Specification of dependencies
 
@@ -43,7 +43,7 @@ python vide_demo.py --video-path ../data/examples/videos/person_2.mp4 --output-p
 
 ## 3. Demo in image
 
-This bascially run an image through the Peekaboo model to discover the object in the image, and then refines the output mask using SAM2.
+This bascially runs an image through the Peekaboo model to discover the foreground object in the image, and then refines the output mask using SAM2.
 
 ```
 python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
