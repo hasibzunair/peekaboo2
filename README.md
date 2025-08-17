@@ -38,7 +38,7 @@ To run the demo with your custom video,
 
 ```
 cd scripts/
-python video_demo.py --video-path ../data/examples/videos/person_2.mp4 --output-path ../outputs/peekaboo2_vid.mp4
+python video_demo.py --video-path ../data/examples/person.mp4 --output-path ../outputs/person-peekaboo2.mp4
 ```
 
 ## 3. Demo in image

@@ -206,7 +206,7 @@ if __name__ == "__main__":
         description="Demo of Peekaboo 2",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--video-path", required=True, help="Input video path (.mp4)")
+    parser.add_argument("--video-path", default="../data/examples/person.mp4", help="Input video path (.mp4)")
     parser.add_argument(
         "--det-model-config",
         type=str,
@@ -227,7 +227,7 @@ if __name__ == "__main__":
         default="../sam2/configs/sam2.1/sam2.1_hiera_l.yaml",
         help="Path to model config",
     )
-    parser.add_argument("--output-path", default="output.mp4", help="Output video path")
+    parser.add_argument("--output-path", default="../outputs/person-output.mp4", help="Output video path")
     args = parser.parse_args()
 
     main(args)
