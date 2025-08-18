@@ -1,7 +1,7 @@
-# Peekaboo 2: Unsupervised Object Localization in Images and Videos
+# Peekaboo 2
 
 This is official code for our work:<br>
-Peekaboo 2: Unsupervised Object Localization in Images and Videos
+PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos
 <br>
 
 https://github.com/user-attachments/assets/f2db4e19-4dc3-40fa-a18a-e037852fffbb
