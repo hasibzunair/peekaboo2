@@ -120,7 +120,7 @@
 <head>
 	<title>PEEKABOO2 for Unsupervised Object Localization in Images and Videos.</title>
 	<meta property="og:image" content="./resources/model.png"/> <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
-	<meta property="og:title" content="PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos" />
+	<meta property="og:title" content="PEEKABOO2: Adapting Peekaboo with Segment Anything Model for Unsupervised Object Localization in Images and Videos" />
 	<meta property="og:description" content="Paper description." />
 
 	<!-- Get from Google Analytics -->
@@ -138,7 +138,7 @@
 <body>
 	<br>
 	<center>
-		<span style="font-size:33px">PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos</span>
+		<span style="font-size:33px">PEEKABOO2: Adapting Peekaboo with Segment Anything Model for Unsupervised Object Localization in Images and Videos</span>
 		<table align=center width=600px>
 			<table align=center width=450px> <!--Adjust for spacing between author names-->
 				<tr>
@@ -379,7 +379,17 @@
 		<center><h1>Abstract</h1></center>
 		<tr>
 			<td>
-				Coming soon.
+				Recent progress in promptable visual segmentation, like the Segment Anything Model 2 (SAM2), 
+				has shown strong ability to segment and track user-defined objects in images and videos. 
+				<FONT COLOR="#ff0000">However, SAM2 cannot natively handle discovering salient 
+				objects, as it has no mechanism to detect which objects are salient. Moreover, it cannot 
+				segment and track salient objects automatically because it relies on human inputs</FONT>. 
+				<strong>So how can we segment and track salient objects without knowing anything about them?</strong> This work 
+				introduces PEEKABOO2, which is specifically designed for unsupervised salient object detection and tracking.
+				PEEKABOO2 finds the salient object on the first frame, which acts as a prompt that is propagated 
+				to get spatio-temporal masks across the entire video. As a result, <FONT COLOR="#46C646">PEEKABOO2 is able to 
+				discover, consistently segment and track diverse salient objects in images and videos without the need for retraining, 
+				fine-tuning and human intervention</FONT>.
 			</td>
 		</tr>
 	</table>
@@ -396,10 +406,9 @@
 			</center></td>
 		</tr>
 	</table>
-	-->
-
 	<br>
 	<hr>
+	-->
 
 	<table align=center width=900px>
 		<tr>
