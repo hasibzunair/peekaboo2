@@ -1,7 +1,7 @@
 # Peekaboo 2
 
 This is official code for our work:<br>
-PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos
+PEEKABOO2: Adapting Peekaboo with Segment Anything Model for Unsupervised Object Localization in Images and Videos
 <br>
 
 https://github.com/user-attachments/assets/f2db4e19-4dc3-40fa-a18a-e037852fffbb
@@ -55,7 +55,7 @@ python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ..
 @misc{HasibGitHub,
 author = {Zunair, Hasib},
 booktitle = {GitHub},
-title = {PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos},
+title = {PEEKABOO2: Adapting Peekaboo with Segment Anything Model for Unsupervised Object Localization in Images and Videos},
 url = {https://github.com/hasibzunair/peekaboo2},
 year = {2025}
 }
