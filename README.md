@@ -49,6 +49,18 @@ This bascially runs an image through the Peekaboo model to discover the foregrou
 python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
 ```
 
+## 4. Citation
+
+```bibtex
+@misc{HasibGitHub,
+author = {Zunair, Hasib},
+booktitle = {GitHub},
+title = {PEEKABOO2: Adapting Peekaboo with Segment Anything for Unsupervised Object Localization in Images and Videos},
+url = {https://github.com/hasibzunair/peekaboo2},
+year = {2025}
+}
+```
+
 ## Acknowledgements
 
 This repository was built on top of [Peekaboo](https://github.com/hasibzunair/peekaboo) and [SAM2](https://github.com/facebookresearch/sam2) by Meta FAIR. Consider acknowledging these projects.
