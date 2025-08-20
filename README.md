@@ -37,18 +37,19 @@ cd sam2/checkpoints
 cd ../..
 ```
 
-To run the demo with your custom video, 
+To run the demo with a video,
 
-```
+```bash
 cd scripts/
 python video_demo.py --video-path ../data/examples/person.mp4 --output-path ../outputs/person-peekaboo2.mp4
 ```
 
 ## 3. Demo on image
 
-This runs an image through the Peekaboo model to find the salient object in the image, and then refines the output mask using SAM2.
+This runs the demo with an image,
 
-```
+```bash
+cd scripts/
 python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
 ```
 
