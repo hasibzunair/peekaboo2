@@ -138,7 +138,6 @@ def evaluate_saliency(
     apply_weights: bool = True,
     evaluation_mode: str = "single",  # choices are ["single", "multi"]
 ):
-
     if im_fullsize:
         # Change transformation
         dataset.fullimg_mode()

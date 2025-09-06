@@ -404,7 +404,7 @@ def train_dino(args):
     momentum_schedule = utils.cosine_scheduler(
         args.momentum_teacher, 1, args.epochs, len(data_loader)
     )
-    print(f"Loss, optimizer and schedulers ready.")
+    print("Loss, optimizer and schedulers ready.")
 
     # ============ optionally resume training ... ============
     to_restore = {"epoch": 0}

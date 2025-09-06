@@ -1,4 +1,3 @@
-import os
 import torch
 import argparse
 import torch.nn as nn
@@ -6,7 +5,6 @@ import torch.nn.functional as F
 import gradio as gr
 import codecs
 import numpy as np
-import cv2
 
 from PIL import Image, ImageDraw
 from model import PeekabooModel
@@ -31,10 +29,10 @@ def inference(img_path):
         inputs = img_t.to(device)
 
     # Forward step
-    print(f"Start Peekaboo prediction.")
+    print("Start Peekaboo prediction.")
     with torch.no_grad():
         preds = model(inputs, for_eval=True)
-    print(f"Done Peekaboo prediction.")
+    print("Done Peekaboo prediction.")
 
     sigmoid = nn.Sigmoid()
     h, w = img_t.shape[-2:]

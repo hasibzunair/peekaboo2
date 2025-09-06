@@ -152,7 +152,6 @@ def IoU(mask1, mask2):
 
 
 def batch_apply_bilateral_solver(data, masks, get_all_cc=True, shape=None):
-
     cnt_bs = 0
     masks_bs = []
 
@@ -321,9 +320,7 @@ def bbox_iou(
             ) / 4  # center distance squared
             if DIoU:
                 return iou - rho2 / c2  # DIoU
-            elif (
-                CIoU
-            ):  # https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47
+            elif CIoU:  # https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47
                 v = (4 / math.pi**2) * torch.pow(
                     torch.atan(w2 / h2) - torch.atan(w1 / h1), 2
                 )

@@ -3,13 +3,11 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-from dataclasses import dataclass
 from typing import Iterable, List, Optional
 
 import strawberry
 from app_conf import API_URL
 from data.resolver import resolve_videos
-from dataclasses_json import dataclass_json
 from strawberry import relay
 
 

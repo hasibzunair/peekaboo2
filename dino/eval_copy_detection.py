@@ -13,16 +13,14 @@
 # limitations under the License.
 import os
 import sys
-import pickle
 import argparse
 
 import torch
 from torch import nn
 import torch.distributed as dist
 import torch.backends.cudnn as cudnn
-from torchvision import models as torchvision_models
 from torchvision import transforms as pth_transforms
-from PIL import Image, ImageFile
+from PIL import Image
 import numpy as np
 
 import utils
@@ -107,7 +105,6 @@ def score_ap_from_ranks_1(ranks, nres):
     recall_step = 1.0 / nres
 
     for ntp, rank in enumerate(ranks):
-
         # y-size on left side of trapezoid:
         # ntp = nb of true positives so far
         # rank = nb of retrieved items so far

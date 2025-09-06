@@ -165,7 +165,6 @@ class Trainer:
         meters: Optional[Dict[str, Any]] = None,
         loss: Optional[Dict[str, Any]] = None,
     ):
-
         self._setup_env_variables(env_variables)
         self._setup_timers()
 
@@ -289,7 +288,6 @@ class Trainer:
             raise ValueError(f"Unsupported accelerator: {accelerator}")
 
     def _setup_ddp_distributed_training(self, distributed_conf, accelerator):
-
         assert isinstance(self.model, torch.nn.Module)
 
         self.model = nn.parallel.DistributedDataParallel(
@@ -453,7 +451,6 @@ class Trainer:
         model: nn.Module,
         phase: str,
     ):
-
         outputs = model(batch)
         targets = batch.masks
         batch_size = len(batch.img_batch)
@@ -525,7 +522,6 @@ class Trainer:
             self.train_dataset = instantiate(self.data_conf.train)
 
     def run_train(self):
-
         while self.epoch < self.max_epochs:
             dataloader = self.train_dataset.get_loader(epoch=int(self.epoch))
             barrier()
@@ -615,7 +611,6 @@ class Trainer:
         end = time.time()
 
         for data_iter, batch in enumerate(val_loader):
-
             # measure data loading time
             data_time.update(time.time() - end)
 
@@ -701,7 +696,6 @@ class Trainer:
         }
 
     def train_epoch(self, train_loader):
-
         # Init stat meters
         batch_time_meter = AverageMeter("Batch Time", self.device, ":.2f")
         data_time_meter = AverageMeter("Data Time", self.device, ":.2f")
@@ -977,7 +971,6 @@ class Trainer:
                 )
 
     def _setup_components(self):
-
         # Get the keys for all the val datasets, if any
         val_phase = Phase.VAL
         val_keys = None

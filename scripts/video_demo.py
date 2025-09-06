@@ -53,7 +53,6 @@ elif device.type == "mps":
 
 
 def main(args):
-
     # Detection model configuration
     config, _ = load_config(args.det_model_config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -94,7 +93,6 @@ def main(args):
     print(f"Video loaded: {width}x{height} at {frame_rate} FPS, {total_frames} frames")
 
     with torch.inference_mode():
-
         # Convert to PIL for the detection model
         img = Image.fromarray(cv2.cvtColor(first_frame, cv2.COLOR_BGR2RGB))
         original_size = img.size  # (w, h)
@@ -152,9 +150,7 @@ def main(args):
         out = cv2.VideoWriter(args.output_path, fourcc, frame_rate, (width, height))
 
         # Run propagation throughout the video
-        video_segments = (
-            {}
-        )  # video_segments contains the per-frame segmentation results
+        video_segments = {}  # video_segments contains the per-frame segmentation results
         for out_frame_idx, out_obj_ids, out_mask_logits in predictor.propagate_in_video(
             inference_state
         ):

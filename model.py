@@ -32,7 +32,6 @@ class PeekabooModel(nn.Module):
         vit_patch_size=8,
         enc_type_feats="k",
     ):
-
         super(PeekabooModel, self).__init__()
 
         ########## Encoder ##########
@@ -57,7 +56,6 @@ class PeekabooModel(nn.Module):
         return x
 
     def forward(self, batch, decoder=None, for_eval=False):
-
         # Make the image divisible by the patch size
         if for_eval:
             batch = self._make_input_divisible(batch)
@@ -115,7 +113,6 @@ class PeekabooModel(nn.Module):
 
     @torch.no_grad()
     def extract_feats(self, dims, type_feats="k"):
-
         nb_im, nh, nb_tokens, _ = dims
         qkv = (
             self.hook_features["qkv"]

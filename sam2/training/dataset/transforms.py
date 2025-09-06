@@ -25,7 +25,6 @@ from training.utils.data_utils import VideoDatapoint
 
 
 def hflip(datapoint, index):
-
     datapoint.frames[index].data = F.hflip(datapoint.frames[index].data)
     for obj in datapoint.frames[index].objects:
         if obj.segment is not None:

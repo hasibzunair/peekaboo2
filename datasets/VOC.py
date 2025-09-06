@@ -1,16 +1,9 @@
 import os
-from typing import Optional, Tuple, Union, Dict, List
+from typing import Tuple, Union, Dict, List
 
-import cv2
-from pycocotools.coco import COCO
 import numpy as np
-import torch
 import torchvision
 from PIL import Image, PngImagePlugin
-from torch.utils.data import Dataset
-from torchvision import transforms as T
-from torchvision.transforms import ColorJitter, RandomApply, RandomGrayscale
-from tqdm import tqdm
 
 VOCDetectionMetadataType = Dict[str, Dict[str, Union[str, Dict[str, str], List[str]]]]
 

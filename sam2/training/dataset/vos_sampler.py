@@ -40,7 +40,6 @@ class RandomUniformSampler(VOSSampler):
         self.reverse_time_prob = reverse_time_prob
 
     def sample(self, video, segment_loader, epoch=None):
-
         for retry in range(MAX_RETRIES):
             if len(video.frames) < self.num_frames:
                 raise Exception(

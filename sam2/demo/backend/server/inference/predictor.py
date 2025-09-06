@@ -41,7 +41,6 @@ logger = logging.getLogger(__name__)
 
 
 class InferenceAPI:
-
     def __init__(self) -> None:
         super(InferenceAPI, self).__init__()
 

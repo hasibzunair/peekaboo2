@@ -15,6 +15,7 @@
 A script to run multinode training with submitit.
 Almost copy-paste from https://github.com/facebookresearch/deit/blob/main/run_with_submitit.py
 """
+
 import argparse
 import os
 import uuid
@@ -80,7 +81,6 @@ class Trainer(object):
         main_dino.train_dino(self.args)
 
     def checkpoint(self):
-        import os
         import submitit
 
         self.args.dist_url = get_init_file().as_uri()

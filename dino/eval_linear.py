@@ -18,7 +18,6 @@ from pathlib import Path
 
 import torch
 from torch import nn
-import torch.distributed as dist
 import torch.backends.cudnn as cudnn
 from torchvision import datasets
 from torchvision import transforms as pth_transforms

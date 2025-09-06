@@ -54,7 +54,6 @@ elif device.type == "mps":
 
 
 def main(args):
-
     # Detection model configuration
     config, _ = load_config(args.det_model_config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -89,7 +88,6 @@ def main(args):
     print(f"Image loaded: {width}x{height}")
 
     with torch.inference_mode():
-
         # Convert to PIL for the detection model
         img = Image.fromarray(cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB))
         original_size = img.size  # (w, h)

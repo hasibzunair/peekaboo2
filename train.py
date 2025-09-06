@@ -65,7 +65,6 @@ def train_model(
     save_model_freq=500,
     tensorboard_log_dir=None,
 ):
-
     # Diverse
     print(f"Data will be saved in {tensorboard_log_dir}")
     save_dir = tensorboard_log_dir
@@ -118,7 +117,6 @@ def train_model(
         running_loss = 0.0
         tbar = tqdm(enumerate(trainloader, 0), leave=None)
         for i, data in tbar:
-
             # Get the inputs
             inputs, masked_inputs, _, input_nonorm, masked_input_nonorm, _, _ = data
 
@@ -288,7 +286,6 @@ def train_model(
 
 
 def main():
-
     ########## Get arguments ##########
 
     args = get_argparser()

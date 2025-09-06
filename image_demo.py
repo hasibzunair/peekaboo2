@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     # Print params
     summary(model, input_size=(1, 3, 224, 224))
-    print(f"\n")
+    print("\n")
 
     # Load the image
     with open(args.img_path, "rb") as f:

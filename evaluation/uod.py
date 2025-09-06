@@ -33,7 +33,6 @@ def evaluation_unsupervised_object_discovery(
     output_dir: str = "outputs",
     no_hards: bool = False,
 ):
-
     assert evaluation_mode == "single"
 
     sigmoid = nn.Sigmoid()
@@ -47,7 +46,6 @@ def evaluation_unsupervised_object_discovery(
     start_time = time.time()
     pbar = tqdm(dataset.dataloader)
     for im_id, inp in enumerate(pbar):
-
         # ------------ IMAGE PROCESSING -------------------------------------------
         img = inp[0]
 

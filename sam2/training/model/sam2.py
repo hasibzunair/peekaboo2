@@ -11,10 +11,8 @@ import torch
 import torch.distributed
 from sam2.modeling.sam2_base import SAM2Base
 from sam2.modeling.sam2_utils import (
-    get_1d_sine_pe,
     get_next_point,
     sample_box_points,
-    select_closest_cond_frames,
 )
 
 from sam2.utils.misc import concat_points
@@ -460,7 +458,6 @@ class SAM2Train(SAM2Base):
         object_score_logits,
         current_out,
     ):
-
         assert gt_masks is not None
         all_pred_masks = [low_res_masks]
         all_pred_high_res_masks = [high_res_masks]

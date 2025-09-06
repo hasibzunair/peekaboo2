@@ -39,7 +39,6 @@ transform = pth_transforms.Compose(
 
 class ImageDataset:
     def __init__(self, image_path):
-
         self.image_path = image_path
         self.name = image_path.split("/")[-1]
 
@@ -122,7 +121,7 @@ class UODDataset:
         self.remove_hards = remove_hards
         self.hards = []
         if remove_hards:
-            self.name += f"-nohards"
+            self.name += "-nohards"
             self.hards = self.get_hards()
             print(f"Nb images discarded {len(self.hards)}")
 
@@ -345,9 +344,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True, GIoU=False, DIoU=False, CIoU=False, eps=
             ) / 4  # center distance squared
             if DIoU:
                 return iou - rho2 / c2  # DIoU
-            elif (
-                CIoU
-            ):  # https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47
+            elif CIoU:  # https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47
                 v = (4 / math.pi**2) * torch.pow(
                     torch.atan(w2 / h2) - torch.atan(w1 / h1), 2
                 )

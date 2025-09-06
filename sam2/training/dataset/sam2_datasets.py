@@ -6,7 +6,7 @@
 
 import logging
 import math
-from typing import Callable, Iterable, List, Optional, Sequence
+from typing import Callable, Iterable, List, Optional
 
 import torch
 

@@ -49,7 +49,9 @@ def random_crop(
 
 
 def compute_size(
-    input_size: Tuple[int, int], output_size: int, edge: str  # h, w
+    input_size: Tuple[int, int],
+    output_size: int,
+    edge: str,  # h, w
 ) -> Tuple[int, int]:
     assert edge in ["shorter", "longer"]
     h, w = input_size

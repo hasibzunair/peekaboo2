@@ -14,6 +14,7 @@
 """
 Some parts are taken from https://github.com/Liusifei/UVC
 """
+
 import os
 import copy
 import glob
@@ -25,10 +26,8 @@ from tqdm import tqdm
 
 import cv2
 import torch
-import torch.nn as nn
 from torch.nn import functional as F
 from PIL import Image
-from torchvision import transforms
 
 import utils
 import vision_transformer as vits
@@ -187,8 +186,9 @@ def extract_feature(model, frame, return_h_w=False):
     """Extract one frame feature everytime."""
     out = model.get_intermediate_layers(frame.unsqueeze(0).cuda(), n=1)[0]
     out = out[:, 1:, :]  # we discard the [CLS] token
-    h, w = int(frame.shape[1] / model.patch_embed.patch_size), int(
-        frame.shape[2] / model.patch_embed.patch_size
+    h, w = (
+        int(frame.shape[1] / model.patch_embed.patch_size),
+        int(frame.shape[2] / model.patch_embed.patch_size),
     )
     dim = out.shape[-1]
     out = out[0].reshape(h, w, dim)

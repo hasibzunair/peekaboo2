@@ -197,7 +197,7 @@ class PeekabooDataset(Dataset):
         # Images
         self.list_images = None
         self.list_scribbles = None
-        if not "VOC" in self.name and not "COCO" in self.name:
+        if "VOC" not in self.name and "COCO" not in self.name:
             self.list_images = [
                 os.path.join(img_dir, i) for i in sorted(os.listdir(img_dir))
             ]
