@@ -6,7 +6,6 @@
 import time
 import torch
 import argparse
-import numpy as np
 from PIL import Image
 from torchvision import transforms as T
 from tqdm import tqdm
@@ -83,7 +82,6 @@ def run_segmentation_mask_inference(model, inputs, orig_sizes):
 
 
 def benchmark_fn(model, inputs, orig_sizes, device="cuda", n_warmup=10, n_iters=50):
-
     # warmup
     for _ in range(n_warmup):
         _ = run_segmentation_mask_inference(model, inputs, orig_sizes)
@@ -132,11 +130,19 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Benchmark Peekaboo segmentation")
 
-    parser.add_argument("--img-path", type=str, required=True, help="Path to image file")
-    parser.add_argument("--model-weights", type=str, required=True, help="Path to model weights")
+    parser.add_argument(
+        "--img-path", type=str, required=True, help="Path to image file"
+    )
+    parser.add_argument(
+        "--model-weights", type=str, required=True, help="Path to model weights"
+    )
     parser.add_argument("--config", type=str, required=True, help="Path to config YAML")
-    parser.add_argument("--device", type=str, default="cuda", help="Device to run on (cuda or cpu)")
-    parser.add_argument("--batch-size", type=int, default=8, help="Batch size for inference")
+    parser.add_argument(
+        "--device", type=str, default="cuda", help="Device to run on (cuda or cpu)"
+    )
+    parser.add_argument(
+        "--batch-size", type=int, default=8, help="Batch size for inference"
+    )
 
     args = parser.parse_args()
     main(args)
