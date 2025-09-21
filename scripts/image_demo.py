@@ -98,8 +98,7 @@ def main(args):
         inputs = img_t.to(device)
 
         # Detection model forward step
-        with torch.no_grad():
-            preds = detection_model(inputs, for_eval=True)
+        preds = detection_model(inputs, for_eval=True)
 
         sigmoid = nn.Sigmoid()
         orig_h, orig_w = original_size[1], original_size[0]

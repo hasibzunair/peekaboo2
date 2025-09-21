@@ -81,7 +81,7 @@ if __name__ == "__main__":
         img_t = transform(img_t).unsqueeze(0).to(device)
 
         # Model inference
-        with torch.no_grad():
+        with torch.inference_mode():
             preds = model(img_t, for_eval=True)
             print(f"Shape of model output is {preds.shape}")
 
