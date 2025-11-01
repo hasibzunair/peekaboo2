@@ -62,7 +62,7 @@ cd scripts/
 python create_mask.py --image-path ../data/examples/car.jpg --output-path ../outputs/result.png --save-mask
 
 # save masks and bounding boxes for images in a folder
-python create_masks_and_boxes.py --input-folder /home/ubuntu/hasib/projects/pave-rt-detr/rtdetrv2_pytorch/dataset/fti-v19oct23v3-data/train --output-folder ../outputs/masks/
+python create_masks_and_boxes.py --input-folder PATH_TO_IMAGES --output-folder PATH_TO_OUTPUT
 ```
 
 ## 5. Citation
