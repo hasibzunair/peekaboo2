@@ -53,7 +53,19 @@ cd scripts/
 python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ../outputs/octpous-peekaboo2.png
 ```
 
-## 4. Citation
+## 4. Automatic Labeling
+
+```bash
+cd scripts/
+
+# visualize mask and bounding box for a single image
+python create_mask.py --image-path ../data/examples/car.jpg --output-path ../outputs/result.png --save-mask
+
+# save masks and bounding boxes for images in a folder
+python create_masks_and_boxes.py --input-folder /home/ubuntu/hasib/projects/pave-rt-detr/rtdetrv2_pytorch/dataset/fti-v19oct23v3-data/train --output-folder ../outputs/masks/
+```
+
+## 5. Citation
 
 ```bibtex
 @misc{HasibGitHub,
