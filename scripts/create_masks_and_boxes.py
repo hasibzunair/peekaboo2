@@ -121,9 +121,16 @@ def process_single_image(image_path, detection_model, predictor, device):
         # x_min, y_min, x_max, y_max = input_box
         # neg_points = []
 
+        # Generate negative points around the bbox, not inside it
+        # num_neg_points = np.random.randint(5, 10)
+        # x_min, y_min, x_max, y_max = input_box
+
+        # margin = 30  # pixels around bbox to sample negative points
+        # neg_points = []
+
         # for _ in range(num_neg_points * 5):
-        #     x_rand = np.random.randint(0, width)
-        #     y_rand = np.random.randint(0, height)
+        #     x_rand = np.random.randint(max(0, x_min - margin), min(width, x_max + margin))
+        #     y_rand = np.random.randint(max(0, y_min - margin), min(height, y_max + margin))
 
         #     # keep only points *outside* the bbox
         #     if not (x_min <= x_rand <= x_max and y_min <= y_rand <= y_max):
@@ -132,13 +139,12 @@ def process_single_image(image_path, detection_model, predictor, device):
         #     if len(neg_points) >= num_neg_points:
         #         break
 
-        # if len(neg_points) == 0:
-        #     print("Warning: No negative points generated, defaulting to box only.")
-        #     input_point = None
-        #     input_label = None
-        # else:
+        # if len(neg_points) > 0:
         #     input_point = np.array(neg_points)
         #     input_label = np.zeros(len(neg_points), dtype=int)
+        # else:
+        #     input_point = None
+        #     input_label = None
 
         # # Get refined mask from SAM2 with negative keypoints
         # masks, scores, _ = predictor.predict(
