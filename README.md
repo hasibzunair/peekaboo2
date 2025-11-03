@@ -60,10 +60,34 @@ cd scripts/
 
 # visualize mask and bounding box for a single image
 python create_mask.py --image-path ../data/examples/car.jpg --output-path ../outputs/result.png --save-mask
-
-# save masks and bounding boxes for images in a folder
-python create_masks_and_boxes.py --input-folder PATH_TO_IMAGES --output-folder PATH_TO_OUTPUT
 ```
+
+which will save an image [result.png](./data/examples/result.png) with the mask and box as well as [result_mask.png](./data/examples/result_mask.png) with the binary segmentation mask and output like:
+
+```bash
+Using device: cuda
+hyperparameters: model={'arch': 'vit_small', 'patch_size': 8, 'pre_training': 'dino'}, peekaboo={'feats': 'k'}, training={'dataset': 'DUTS-TR', 'dataset_set': None, 'seed': 0, 'max_iter': 500, 'nb_epochs': 3, 'batch_size': 50, 'lr0': 0.05, 'step_lr_size': 50, 'step_lr_gamma': 0.95, 'crop_size': 224, 'scale_range': [0.1, 3.0], 'photometric_aug': 'gaussian_blur', 'proba_photometric_aug': 0.5, 'cropping_strategy': 'random_scale'}, evaluation={'type': 'saliency', 'datasets': ['DUT-OMRON', 'ECSSD'], 'freq': 50}
+Loading model from weights ../data/weights/peekaboo_decoder_weights_niter500.pt.
+Detection model ../data/weights/peekaboo_decoder_weights_niter500.pt loaded correctly.
+Image loaded: 1920x1080
+Predicted bounding box: [ 633  244 1263  959]
+Output saved to ../outputs/result.png
+[  0 255]
+Mask saved to ../outputs/result_mask.png
+```
+
+To automatically label a folder of images, run:
+```bash
+cd scripts/
+
+# save binary masks and bounding boxes
+python create_masks_and_boxes.py --input-folder PATH_TO_IMAGES --output-folder OUTPUT_PATH
+
+# save binary masks and bounding boxes and visualize images and masks (do NOT use this when running inference on large datasets)
+python create_masks_and_boxes.py --input-folder PATH_TO_IMAGES --output-folder OUTPUT_PATH --save-vis
+```
+
+This will create and save the binary masks in a folder as well as create a CSV file which stores the filenames and the bounding boxes.
 
 ## 5. Citation
 
