@@ -55,6 +55,8 @@ python image_demo.py --image-path ../data/examples/octopus.jpeg --output-path ..
 
 ## 4. Automatic Labeling
 
+To get started on automatically labeling images for binary segmentation or object detection, run:
+
 ```bash
 cd scripts/
 
