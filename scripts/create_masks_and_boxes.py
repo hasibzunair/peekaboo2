@@ -104,13 +104,51 @@ def process_single_image(image_path, detection_model, predictor, device):
         # Use the bounding box from Peekaboo to refine with SAM2
         input_box = np.array(pred_bbox)
 
-        # Get refined mask from SAM2
-        masks, _, _ = predictor.predict(
+        # Get refined mask from SAM2 without negative keypoints
+        masks, scores, _ = predictor.predict(
             point_coords=None,
             point_labels=None,
             box=input_box[None, :],
             multimask_output=False,
         )
+        sorted_ind = np.argsort(scores)[::-1]
+        masks = masks[sorted_ind]
+
+        # Generate random negative keypoints outside the bounding box
+        # TODO: need to investiage further if this helps improve segmentation,
+        # currently seeing some noisy masks
+        # num_neg_points = np.random.randint(5, 11)
+        # x_min, y_min, x_max, y_max = input_box
+        # neg_points = []
+
+        # for _ in range(num_neg_points * 5):
+        #     x_rand = np.random.randint(0, width)
+        #     y_rand = np.random.randint(0, height)
+
+        #     # keep only points *outside* the bbox
+        #     if not (x_min <= x_rand <= x_max and y_min <= y_rand <= y_max):
+        #         neg_points.append([x_rand, y_rand])
+            
+        #     if len(neg_points) >= num_neg_points:
+        #         break
+
+        # if len(neg_points) == 0:
+        #     print("Warning: No negative points generated, defaulting to box only.")
+        #     input_point = None
+        #     input_label = None
+        # else:
+        #     input_point = np.array(neg_points)
+        #     input_label = np.zeros(len(neg_points), dtype=int)
+
+        # # Get refined mask from SAM2 with negative keypoints
+        # masks, scores, _ = predictor.predict(
+        #     point_coords=input_point,
+        #     point_labels=input_label,
+        #     box=input_box[None, :],
+        #     multimask_output=True,
+        # )
+        # sorted_ind = np.argsort(scores)[::-1]
+        # masks = masks[sorted_ind]
 
         # Get the best mask
         refined_mask = masks[0]
