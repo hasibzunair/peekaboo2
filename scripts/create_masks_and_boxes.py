@@ -116,7 +116,7 @@ def process_single_image(image_path, detection_model, predictor, device):
         refined_mask = masks[0]
         refined_mask = refined_mask.astype(np.uint8)
 
-        return refined_mask, pred_bbox
+        return refined_mask, pred_bbox, input_image
 
 
 ### Main function ###
@@ -148,6 +148,11 @@ def main(args):
     output_folder = Path(args.output_folder)
     output_folder.mkdir(parents=True, exist_ok=True)
 
+    # Create visualizations folder if requested
+    vis_folder = output_folder / "visualizations"
+    if args.save_vis:
+        vis_folder.mkdir(parents=True, exist_ok=True)
+
     # Get all JPG images from input folder
     input_folder = Path(args.input_folder)
     image_paths = sorted(list(input_folder.glob("*.jpg")) + list(input_folder.glob("*.JPG")))
@@ -157,7 +162,7 @@ def main(args):
         return
 
     # TODO: Remove slice to process all images
-    image_paths = image_paths[:100]
+    #image_paths = image_paths[:100]
     print(f"Processing {len(image_paths)} images...")
 
     # Prepare CSV file
@@ -170,13 +175,19 @@ def main(args):
             print(f"\nProcessing [{idx+1}/{len(image_paths)}]: {image_path.name}")
             
             # Process image
-            mask, bbox = process_single_image(image_path, detection_model, predictor, device)
+            mask, bbox, input_image = process_single_image(image_path, detection_model, predictor, device)
             
             # Save mask
             mask_filename = f"{image_path.stem}_mask.png"
             mask_path = output_folder / mask_filename
             mask_vis = (mask * 255).astype(np.uint8)
             cv2.imwrite(str(mask_path), mask_vis)
+
+            # Save visualization (side by side)
+            if args.save_vis:
+                combined = np.hstack((input_image, cv2.cvtColor(mask_vis, cv2.COLOR_GRAY2BGR)))
+                vis_path = vis_folder / f"{image_path.stem}_vis.png"
+                cv2.imwrite(str(vis_path), combined)
             
             # Store results for CSV
             x_min, y_min, x_max, y_max = bbox
@@ -190,6 +201,8 @@ def main(args):
             })
             
             print(f"Saved mask to {mask_filename}")
+            if args.save_vis:
+                print(f"Saved visualization to {vis_path.name}")
             print(f"Bounding box: [{x_min:.1f}, {y_min:.1f}, {x_max:.1f}, {y_max:.1f}]")
             
         except Exception as e:
@@ -266,6 +279,10 @@ if __name__ == "__main__":
         "--track-model-config",
         default="../sam2/configs/sam2.1/sam2.1_hiera_l.yaml",
         help="Path to SAM2 model config",
+    )
+    parser.add_argument(
+        "--save-vis", action="store_true", 
+        help="If set, save input and mask side by side"
     )
     args = parser.parse_args()
 
