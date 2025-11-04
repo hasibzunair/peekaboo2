@@ -206,7 +206,9 @@ def main(args):
         return
 
     # TODO: Remove slice to process all images
-    #image_paths = image_paths[:100]
+    #import random
+    #image_paths = random.sample(image_paths, 50)
+    #image_paths = image_paths[:20]
     print(f"Processing {len(image_paths)} images...")
 
     # Prepare CSV file
