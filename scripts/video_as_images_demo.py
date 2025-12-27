@@ -1,7 +1,4 @@
-# Code for Peekaboo 2
-# Author: Hasib Zunair
-
-"""PeekabooSAM2 demo on videos."""
+"""PeekabooSAM2 demo on image frames from a folder."""
 
 import sys
 import os
@@ -74,23 +71,27 @@ def main(args):
         args.track_model_config, args.track_model_weights, device=device
     )
 
-    # Open input video
-    cap = cv2.VideoCapture(args.video_path)
-    if not cap.isOpened():
-        raise ValueError(f"Cannot open video: {args.video_path}")
+    # Get sorted list of image files from folder
+    image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff')
+    image_files = sorted([
+        f for f in os.listdir(args.frames_folder)
+        if f.lower().endswith(image_extensions)
+    ])
+    
+    if not image_files:
+        raise ValueError(f"No image files found in folder: {args.frames_folder}")
+    
+    total_frames = len(image_files)
+    print(f"Found {total_frames} frames in {args.frames_folder}")
 
-    # Get first frame
-    ret, first_frame = cap.read()
-    if not ret:
-        raise ValueError("Could not read first frame")
-
-    # Init frame rate, w, h, total frames
-    frame_rate = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    print(f"Video loaded: {width}x{height} at {frame_rate} FPS, {total_frames} frames")
+    # Read first frame to get dimensions
+    first_frame_path = os.path.join(args.frames_folder, image_files[0])
+    first_frame = cv2.imread(first_frame_path)
+    if first_frame is None:
+        raise ValueError(f"Could not read first frame: {first_frame_path}")
+    
+    height, width = first_frame.shape[:2]
+    print(f"Frame dimensions: {width}x{height}")
 
     with torch.inference_mode():
         # Convert to PIL for the detection model
@@ -126,8 +127,8 @@ def main(args):
         )
         print(f"Predicted bounding box: {pred_bbox}")
 
-        # Init predictor state with the video path
-        inference_state = predictor.init_state(video_path=args.video_path)
+        # Init predictor state with the frames folder
+        inference_state = predictor.init_state(video_path=args.frames_folder)
 
         # Get box from Peekaboo in (x_min, y_min, x_max, y_max)
         ann_frame_idx = 0
@@ -146,7 +147,7 @@ def main(args):
             else None
         )
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        out = cv2.VideoWriter(args.output_path, fourcc, frame_rate, (width, height))
+        out = cv2.VideoWriter(args.output_path, fourcc, args.fps, (width, height))
 
         # Run propagation throughout the video
         video_segments = {}  # video_segments contains the per-frame segmentation results
@@ -158,14 +159,13 @@ def main(args):
                 for i, out_obj_id in enumerate(out_obj_ids)
             }
 
-        # Reset capture to read frames again for overlay
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-
-        # Write frames
-        for frame_idx in range(total_frames):
-            ret, frame = cap.read()
-            if not ret:
-                break
+        # Write frames with predictions
+        for frame_idx, image_file in enumerate(image_files):
+            frame_path = os.path.join(args.frames_folder, image_file)
+            frame = cv2.imread(frame_path)
+            if frame is None:
+                print(f"Warning: Could not read frame {frame_path}, skipping")
+                continue
 
             overlay = np.zeros_like(frame, dtype=np.uint8)
 
@@ -184,7 +184,6 @@ def main(args):
             blended = cv2.addWeighted(frame, 1, overlay, 0.4, 0)
             out.write(blended)
 
-        cap.release()
         out.release()
         print(f"Output saved to {args.output_path}")
 
@@ -198,13 +197,13 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Demo of Peekaboo 2",
+        description="Demo of Peekaboo 2 on image frames",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--video-path",
-        default="../data/examples/person.mp4",
-        help="Input video path (.mp4)",
+        "--frames-folder",
+        required=True,
+        help="Path to folder containing image frames",
     )
     parser.add_argument(
         "--det-model-config",
@@ -228,8 +227,14 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--output-path",
-        default="../outputs/person-output.mp4",
+        default="../outputs/output.mp4",
         help="Output video path",
+    )
+    parser.add_argument(
+        "--fps",
+        type=float,
+        default=30.0,
+        help="Frame rate for output video",
     )
     args = parser.parse_args()
 
