@@ -83,6 +83,20 @@ def main(args):
     
     total_frames = len(image_files)
     print(f"Found {total_frames} frames in {args.frames_folder}")
+    
+    # Create a temporary folder with renamed frames for SAM2 compatibility
+    temp_folder = os.path.join(args.frames_folder, "_temp_frames")
+    os.makedirs(temp_folder, exist_ok=True)
+    
+    # Copy and rename frames to numeric format
+    for idx, image_file in enumerate(image_files):
+        src_path = os.path.join(args.frames_folder, image_file)
+        ext = os.path.splitext(image_file)[1]
+        dst_path = os.path.join(temp_folder, f"{idx:05d}{ext}")
+        frame = cv2.imread(src_path)
+        cv2.imwrite(dst_path, frame)
+    
+    print(f"Created temporary frames folder: {temp_folder}")
 
     # Read first frame to get dimensions
     first_frame_path = os.path.join(args.frames_folder, image_files[0])
@@ -127,8 +141,8 @@ def main(args):
         )
         print(f"Predicted bounding box: {pred_bbox}")
 
-        # Init predictor state with the frames folder
-        inference_state = predictor.init_state(video_path=args.frames_folder)
+        # Init predictor state with the temp frames folder
+        inference_state = predictor.init_state(video_path=temp_folder)
 
         # Get box from Peekaboo in (x_min, y_min, x_max, y_max)
         ann_frame_idx = 0
@@ -186,6 +200,12 @@ def main(args):
 
         out.release()
         print(f"Output saved to {args.output_path}")
+    
+    # Cleanup temporary folder
+    import shutil
+    if os.path.exists(temp_folder):
+        shutil.rmtree(temp_folder)
+        print(f"Cleaned up temporary folder: {temp_folder}")
 
     # Cleanup
     del predictor, inference_state

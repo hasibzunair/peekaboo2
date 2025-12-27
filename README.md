@@ -41,7 +41,12 @@ To run the demo with a video,
 
 ```bash
 cd scripts/
+
+# video
 python video_demo.py --video-path ../data/examples/person.mp4 --output-path ../outputs/person-peekaboo2.mp4
+
+# image sequences of a video
+python video_as_images_demo.py --frames-folder ../datasets_local/SegTrack-V2/frog/Imgs --output-path ../outputs/output.mp4
 ```
 
 ## 3. Demo on image
